@@ -1,7 +1,11 @@
 # 비밀정보 — 절대 커밋하지 말 것
 .env
 .env.*
+<<<<<<< HEAD
 .env.example
+=======
+!.env.example
+>>>>>>> 18d203577f746f2184abf582af2f4a4dd43e19a1
 *token*.txt
 *secret*
 
