@@ -19,8 +19,8 @@ import requests
 from dotenv import load_dotenv
 
 # 동일한 폴더에 있는 .env 파일의 내용을 환경 변수로 로드합니다.
-a = load_dotenv()
-print(a)
+load_dotenv()
+
 # os.environ.get()을 통해 안전하게 환경 변수 값을 가져옵니다.
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
 
