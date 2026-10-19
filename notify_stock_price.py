@@ -9,7 +9,6 @@
 send_price_notification()으로 알림 로직 전체를 함수 하나에 감싸 두었다.
 `python notify_stock_price.py`로 직접 실행하면 그 함수가 그대로 실행된다.
 """
-
 import os
 import time
 import requests
@@ -77,13 +76,9 @@ def fetch_naver_current_price(code: str, retries: int = 2) -> dict:
             # requests.get()으로 이 주소에 HTTP GET 요청을 보낸다. User-Agent 헤더가 없으면 일부
             # 서버가 "브라우저가 아닌 요청"으로 판단해 응답을 거부하기도 해서 브라우저인 척 흉내낸다.
             # timeout=3: 3초 안에 응답이 없으면 기다리지 않고 바로 예외를 발생시킨다(무한 대기 방지).
-            response = requests.get(
-                url, headers={"User-Agent": "Mozilla/5.0"}, timeout=3
-            )
+            response = requests.get(url, headers={"User-Agent": "Mozilla/5.0"}, timeout=3)
             if response.status_code != 200:
-                print(
-                    f"❌ [{code}] 네이버 현재가 조회 실패 (응답 코드: {response.status_code}, {attempt}/{retries}번째 시도)"
-                )
+                print(f"❌ [{code}] 네이버 현재가 조회 실패 (응답 코드: {response.status_code}, {attempt}/{retries}번째 시도)")
             else:
                 # JSON(JavaScript Object Notation)은 API가 데이터를 주고받을 때 가장 흔히 쓰는 텍스트
                 # 형식이다. 생김새가 파이썬의 딕셔너리·리스트와 거의 그대로 대응된다:
@@ -103,10 +98,8 @@ def fetch_naver_current_price(code: str, retries: int = 2) -> dict:
                 # 그려지면 전일 대비 계산이 통째로 깨진다.
                 # 그래서 "조회 실패"와 똑같이 취급해 (재시도 후에도 안 되면) None을 반환하게 만든다.
                 if price <= 0:
-                    print(
-                        f"❌ [{code}] 가격을 숫자로 읽지 못했습니다 "
-                        f"(closePrice: {data.get('closePrice')!r}, {attempt}/{retries}번째 시도)"
-                    )
+                    print(f"❌ [{code}] 가격을 숫자로 읽지 못했습니다 "
+                          f"(closePrice: {data.get('closePrice')!r}, {attempt}/{retries}번째 시도)")
                 else:
                     return {
                         "code": code,
@@ -123,9 +116,7 @@ def fetch_naver_current_price(code: str, retries: int = 2) -> dict:
                         "traded_at": data.get("localTradedAt"),
                     }
         except Exception as e:
-            print(
-                f"❌ [{code}] 네이버 현재가 조회 중 오류 발생: {e} ({attempt}/{retries}번째 시도)"
-            )
+            print(f"❌ [{code}] 네이버 현재가 조회 중 오류 발생: {e} ({attempt}/{retries}번째 시도)")
 
         if attempt < retries:
             time.sleep(1)  # 순간적인 오류일 수 있으니 짧게 대기 후 재시도
@@ -189,15 +180,11 @@ def send_price_notification() -> bool:
         found += 1
 
     if found == 0:
-        print(
-            "❌ 관심종목의 현재가를 하나도 가져오지 못했습니다. 네이버 API 상태를 확인해 주세요."
-        )
+        print("❌ 관심종목의 현재가를 하나도 가져오지 못했습니다. 네이버 API 상태를 확인해 주세요.")
         return False
 
     if send_telegram_message(telegram_message):
-        print(
-            f"✅ 현재가 메시지를 텔레그램으로 전송했습니다! ({found}/{len(watchlist_codes)}종목)"
-        )
+        print(f"✅ 현재가 메시지를 텔레그램으로 전송했습니다! ({found}/{len(watchlist_codes)}종목)")
         return True
 
     print("❌ 현재가 메시지 전송에 실패했습니다.")
