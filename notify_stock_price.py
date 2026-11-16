@@ -248,7 +248,7 @@ def dedupe_daily_closes(daily_closes: list, today_price: int, intraday_minutes: 
     막습니다."""
     # today_price가 None(오늘 값 없음)이고 intraday_minutes도 비어있으면(둘 다 없음) "오늘"
     # 구간을 아예 안 그리는 상황이므로, 걸러낼 필요 없이 원본 daily_closes를 그대로 돌려준다 —
-    # 이 경우 DB에 저장된 오늘 종가가 있어도(장마감 후 이미 수집된 경우) 정보 손실 없이 보여준다.
+    # 이 경우 DB에 저장된 오늘 종가가 있어도(애프터마켓 마감 뒤 이미 수집된 경우) 정보 손실 없이 보여준다.
     if today_price is None and not intraday_minutes:
         return daily_closes
     # 위 조건에 안 걸렸다는 건 "오늘" 구간을 실제로 따로 그린다는 뜻이므로, daily_closes 안에
@@ -276,7 +276,7 @@ def build_price_chart(daily_closes: list, current_price: int = None,
     intraday_minutes를 넘기면(오늘 분봉, 시간 오름차순) 오늘 구간을 분 단위 선으로 그리고,
     없으면 current_price 한 점만 표시합니다. current_price도 None이면(네이버 API 조회가
     실패한 경우) "오늘" 지점 없이 daily_closes만으로 그립니다 — 이 경우 daily_closes에
-    이미 오늘 종가가 들어있어도(장마감 후 collect_daily_close.py가 실행된 뒤라면) 그대로 표시되어
+    이미 오늘 종가가 들어있어도(애프터마켓 마감 뒤 collect_daily_close.py가 실행된 뒤라면) 그대로 표시되어
     정보 손실이 없습니다. 반대로 분봉/현재가 조회에 성공하면, daily_closes에 오늘 날짜 종가가
     섞여 있어도 제외하고 그립니다 — "오늘" 구간과 중복 표시되는 것을 막기 위해서입니다."""
     import matplotlib
